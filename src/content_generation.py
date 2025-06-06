@@ -51,6 +51,13 @@ class ContentGenerator:
             Dict[str, str]: Generated content with metadata
         """
         try:
+            # If no keywords, return default content
+            if not keywords:
+                return {
+                    'content': "No keywords provided for content generation.",
+                    'trends_used': []
+                }
+            
             # Source trends
             trend_data = self.trend_sourcer.get_google_trends(keywords)
             
