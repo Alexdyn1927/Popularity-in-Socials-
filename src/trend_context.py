@@ -96,7 +96,7 @@ class TrendContext:
         Returns:
             List[TrendMetadata]: Filtered and scored trends
         """
-        self._current_trends = []
+        all_trends: List[TrendMetadata] = []
         for source in self._sources:
             try:
                 source_trends = source.fetch_trends()
@@ -109,7 +109,7 @@ class TrendContext:
                         additional_info=trend.additional_info
                     ) for trend in source_trends
                 ]
-                self._current_trends.extend(
+                all_trends.extend(
                     source.filter_trends(scored_trends, min_score)
                 )
             except Exception as e:
@@ -117,7 +117,8 @@ class TrendContext:
                 print(f"Error fetching trends from {source.__class__.__name__}: {e}")
         
         # Sort trends by score in descending order
-        return sorted(self._current_trends, key=lambda x: x.score, reverse=True)
+        self._current_trends = sorted(all_trends, key=lambda x: x.score, reverse=True)
+        return self._current_trends
     
     @property
     def trends(self) -> List[TrendMetadata]:
