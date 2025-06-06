@@ -25,7 +25,10 @@ class TrendContextValidator:
         if text is None:
             return ""
         
-        # Remove potentially dangerous HTML/script tags
+        # Remove potentially dangerous HTML/script tags and their contents
+        text = re.sub(r'<(script|style)[^>]*>.*?</(script|style)>', '', text, flags=re.DOTALL | re.IGNORECASE)
+        
+        # Remove any remaining HTML tags
         text = re.sub(r'<[^>]+>', '', text)
         
         # Remove excessive whitespace
