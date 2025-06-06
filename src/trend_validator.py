@@ -51,8 +51,11 @@ class TrendContextValidator:
         if not isinstance(topic, str):
             raise ValueError("Topic must be a string")
         
-        # Remove any potential HTML or script tags
+        # Comprehensive HTML and script tag removal
         sanitized_topic = re.sub(r'<[^>]+>', '', topic)
+        
+        # Remove potential JavaScript inline events
+        sanitized_topic = re.sub(r'on\w+="[^"]+"', '', sanitized_topic)
         
         # Limit topic length and remove excessive whitespace
         sanitized_topic = ' '.join(sanitized_topic.split())[:200]
@@ -93,7 +96,7 @@ class TrendContextValidator:
             str: ISO 8601 formatted timestamp
         """
         if timestamp is None:
-            return datetime.utcnow().isoformat()
+            return datetime.now(datetime.UTC).isoformat()
         
         try:
             # Convert to datetime if it's not already
@@ -101,7 +104,7 @@ class TrendContextValidator:
                 timestamp = datetime.fromisoformat(str(timestamp))
             
             # Prevent future timestamps or timestamps too far in the past
-            now = datetime.utcnow()
+            now = datetime.now(datetime.UTC)
             if timestamp > now or timestamp < (now - timedelta(days=365)):
                 raise ValueError("Timestamp out of acceptable range")
             
