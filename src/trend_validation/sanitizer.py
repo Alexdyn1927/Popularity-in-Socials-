@@ -80,7 +80,9 @@ class TrendContextSanitizer:
             elif isinstance(value, list):
                 sanitized_context[key] = [
                     TrendContextSanitizer.sanitize_string(str(item)) 
-                    for item in value if item is not None
+                    for item in value 
+                    if item is not None and 
+                    not re.search(r'<script>|alert\(\)', str(item), re.IGNORECASE)
                 ]
             else:
                 sanitized_context[key] = str(value)
@@ -119,7 +121,9 @@ class TrendContextSanitizer:
             keywords.extend([
                 TrendContextSanitizer.sanitize_string(str(kw)).lower() 
                 for kw in source 
-                if kw and len(TrendContextSanitizer.sanitize_string(str(kw))) > 1
+                if kw and 
+                len(TrendContextSanitizer.sanitize_string(str(kw))) > 1 and
+                not re.search(r'<script>|alert\(\)', str(kw), re.IGNORECASE)
             ])
 
         # Remove duplicates and truncate
