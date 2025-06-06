@@ -8,7 +8,7 @@ using trend insights and advanced language processing.
 from typing import List, Optional, Dict
 import logging
 from src.trend_context import TrendContext, TrendContextProcessor
-from src.trend_sourcing import TrendSourcing
+import src.trend_sourcing
 
 class ContentGenerator:
     """
@@ -17,7 +17,7 @@ class ContentGenerator:
     
     def __init__(
         self, 
-        trend_sourcer: Optional[TrendSourcing] = None,
+        trend_sourcer: Optional[src.trend_sourcing.TrendSourcing] = None,
         trend_processor: Optional[TrendContextProcessor] = None,
         logger: Optional[logging.Logger] = None
     ):
@@ -29,7 +29,7 @@ class ContentGenerator:
             trend_processor (Optional[TrendContextProcessor]): Trend context processor
             logger (Optional[logging.Logger]): Custom logger
         """
-        self.trend_sourcer = trend_sourcer or TrendSourcing()
+        self.trend_sourcer = trend_sourcer or src.trend_sourcing.TrendSourcing()
         self.trend_processor = trend_processor or TrendContextProcessor()
         self.logger = logger or logging.getLogger(__name__)
     
